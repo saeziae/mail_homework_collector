@@ -41,7 +41,7 @@ print(
 ''')
 PASS, MAIL, IMAPSERVER, SMTPSERVER, SIGN = None,None,None,None,None,
 with open("config.json","r",encoding="utf-8") as c:
-    config=json.loads(c.read())
+    config=json.load(c)
     PASS = config["PASS"]
     MAIL = config["MAIL"]
     IMAPSERVER = config["IMAPSERVER"]
