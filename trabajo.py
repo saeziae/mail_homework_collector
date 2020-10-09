@@ -24,6 +24,7 @@ import email
 import smtplib
 import imaplib
 import json
+from base64 import b64decode
 print(
 '''
 --------------------------------
@@ -41,7 +42,7 @@ print(
 ''')
 PASS, MAIL, IMAPSERVER, SMTPSERVER, SIGN = None,None,None,None,None,
 with open("config.json","r",encoding="utf-8") as c:
-    config=json.load(c)
+    config=json.loads(c.read())
     PASS = config["PASS"]
     MAIL = config["MAIL"]
     IMAPSERVER = config["IMAPSERVER"]
@@ -102,6 +103,9 @@ for i in newlist:
     for part in msg.walk():
         if not part.is_multipart():
             name = part.get_param("name")  # 附件的文件名
+            if name[0:8]=="=?utf-8?":       # fix filename
+                name = name[10:-2]
+                name = b64decode(name).decode(encoding="utf-8")
             if name:
                 print("[ ATTACH] ", name)
                 attach_data = part.get_payload(decode=True)  # 附件数据
